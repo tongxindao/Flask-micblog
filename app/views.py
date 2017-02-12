@@ -4,8 +4,9 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
-from .forms import LoginForm
+from .forms import LoginForm, EditForm
 from .models import User, ROLE_USER, ROLE_ADMIN
+from datetime import datetime
 
 '''
 以下三行代码可解决：UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
@@ -42,6 +43,10 @@ def load_user(id):
 @app.before_request
 def before_request():
     g.user = current_user
+    if g.user.is_authenticated:
+        g.user_last_seen = datetime.utcnow()
+        db.session.add(g.user)
+        db.session.commit()
 '''
 全局变量 current_user 是被 Flask-Login 设置的，因此我们只需要把它赋给 g.user ，让访问起来更方便。有了这个，所有请求将会访问到登录用户，即使在模版里。
 '''
@@ -87,3 +92,34 @@ def after_login(resp):
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/user/<nickname>')
+@login_required
+def user(nickname):
+    user = User.query.filter_by(nickname = nickname).first()
+    if user == None:
+        flash('昵称 ' + nickname + ' 未找到。')
+        return redirect(url_for('index'))
+    posts = [
+        { 'author': user, 'body': '测试博客 #1' },
+        { 'author': user, 'body': '测试博客 #2' }
+    ]
+    return render_template('user.html',
+        user = user,
+        posts = posts)
+
+@app.route('/edit', methods=['GET', 'POST'])
+@login_required
+def edit():
+    form = EditForm()
+    if form.validate_on_submit():
+        g.user.nickname = form.nickname.data
+        g.user.about_me = form.about_me.data
+        db.session.add(g.user)
+        db.session.commit()
+        flash('你的更改已保存')
+        return redirect(url_for('edit'))
+    else:
+        form.nickname.data = g.user.nickname
+        form.about_me.data = g.user.about_me
+    return render_template('edit.html', form=form)
