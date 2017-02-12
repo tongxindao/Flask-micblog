@@ -33,6 +33,18 @@ class User(db.Model):
         return 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' + '?d=mm&s=' + str(size)
         # return 'http://www.gravatar.com/avator/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size) # d=mm 决定什么样的图片占位符当用户没有 Gravatar 账户，mm 选项将会返回一个“神秘人”图片，一个人灰色的轮廓。s=N 选项要求头像按照以像素为单位的给定尺寸缩放。
 
+    @staticmethod
+    def make_unique_nickname(nickname):
+        if User.query.filter_by(nickname = nickname).first() == None:
+            return nickname
+        version = 2
+        while True:
+            new_nickname = nickname + str(version)
+            if User.query.filter_by(nickname = new_nickname).first() == None:
+                break
+            version += 1
+        return new_nickname
+
     def __repr__(self):
         return '<User %r>' % (self.nickname)
 
