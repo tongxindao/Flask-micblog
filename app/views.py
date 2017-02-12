@@ -4,9 +4,10 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, db, lm, oid
-from .forms import LoginForm, EditForm
-from .models import User, ROLE_USER, ROLE_ADMIN
+from .forms import LoginForm, EditForm, PostForm
+from .models import User, Post, ROLE_USER, ROLE_ADMIN
 from datetime import datetime
+from config import POSTS_PER_PAGE
 
 '''
 以下三行代码可解决：UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
@@ -16,24 +17,22 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/index/<int:page>', methods=['GET', 'POST'])
 @login_required # 我们添加了login_required 装饰器。这确保了这页只被已经登录的用户看到。
-def index():
-    user = g.user
-    posts = [
-        {
-            'author': { 'nickname': '张三' }, 
-            'body': '功夫瑜伽这部电影真心不错！'       
-        },
-        {
-            'author': { 'nickname': '李四' }, 
-            'body': '北京的PM 2.5还行吧！'       
-        }
-    ]
+def index(page = 1):
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body = form.post.data, timestamp = datetime.utcnow(), author = g.user)
+        db.session.add(post)
+        db.session.commit()
+        flash('您的信息现已推出！')
+        return redirect(url_for('index')) # 避免用户在提交 blog 后不小心触发刷新的动作而导致插入重复的 blog。
+    posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False) # User 类中的 followed_posts 方法返回一个 sqlalchemy 查询对象，该查询对象用于获取我们感兴趣的 blog。
     return render_template('index.html', 
         title = '主页',
-        user = user,
+        form = form,
         posts = posts)
 
 @lm.user_loader
@@ -82,7 +81,7 @@ def after_login(resp):
         user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
         db.session.add(user)
         db.session.commit()
-        # make the user follow him/herself
+        # 使用户关注他/她自己
         db.session.add(user.follow(user))
         db.session.commit()
     remember_me = False
@@ -98,16 +97,14 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/user/<nickname>')
+@app.route('/user/<nickname>/<int:page>')
 @login_required
-def user(nickname):
+def user(nickname, page = 1):
     user = User.query.filter_by(nickname = nickname).first()
-    if user == None:
+    if user is None:
         flash('昵称 ' + nickname + ' 未找到。')
         return redirect(url_for('index'))
-    posts = [
-        { 'author': user, 'body': '测试博客 #1' },
-        { 'author': user, 'body': '测试博客 #2' }
-    ]
+    posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
     return render_template('user.html',
         user = user,
         posts = posts)
@@ -123,7 +120,7 @@ def edit():
         db.session.commit()
         flash('你的更改已保存')
         return redirect(url_for('edit'))
-    else:
+    elif request.method != 'POST':
         form.nickname.data = g.user.nickname
         form.about_me.data = g.user.about_me
     return render_template('edit.html', form=form)
@@ -140,7 +137,7 @@ def internal_error(error):
 @app.route('/follow/<nickname>')
 @login_required
 def follow(nickname):
-    user = User.query.filter_by(nickname=nickname).first()
+    user = User.query.filter_by(nickname = nickname).first()
     if user is None:
         flash('用户 %s 未找到。' % nickname)
         return redirect(url_for('index'))
@@ -154,23 +151,23 @@ def follow(nickname):
     db.session.add(u)
     db.session.commit()
     flash('目前你关注 ' + nickname + '!')
-    return redirect(url_for('user', nickname=nickname))
+    return redirect(url_for('user', nickname = nickname))
 
 @app.route('/unfollow/<nickname>')
 @login_required
 def unfollow(nickname):
-    user = User.query.filter_by(nickname=nickname).first()
+    user = User.query.filter_by(nickname = nickname).first()
     if user is None:
         flash('用户 %s 未找到' % nickname)
         return redirect(url_for('index'))
     if user == g.user:
         flash('你不能取消关注自己！')
-        return redirect(url_for('user', nickname=nickname))
+        return redirect(url_for('user', nickname = nickname))
     u = g.user.unfollow(user)
     if u is None:
         flash('不能取消关注 ' + nickname + '.')
-        return redirect(url_for('user', nickname=nickname))
+        return redirect(url_for('user', nickname = nickname))
     db.session.add(u)
     db.session.commit()
     flash('你已停止关注 ' + nickname + '.')
-    return redirect(url_for('user', nickname=nickname))
+    return redirect(url_for('user', nickname = nickname))
