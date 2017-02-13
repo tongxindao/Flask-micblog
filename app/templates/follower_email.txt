@@ -1,0 +1,4 @@
+尊敬的 {{ user.nickname }}：
+{{ follower.nickname }}已关注你。点击以下链接访问{{ follower.nickname }}的个人资料页面：{{ url_for('user',nickname = follower.nickname, _external = True) }}
+致以诚挚问候，
+微博管理团队

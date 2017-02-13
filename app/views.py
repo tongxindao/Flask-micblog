@@ -8,6 +8,7 @@ from .forms import LoginForm, EditForm, PostForm, SearchForm
 from .models import User, Post, ROLE_USER, ROLE_ADMIN
 from datetime import datetime
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
+from emails import follower_notification
 
 '''
 以下三行代码可解决：UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
@@ -152,6 +153,7 @@ def follow(nickname):
     db.session.add(u)
     db.session.commit()
     flash('目前你关注 ' + nickname + '!')
+    follower_notification(user, g.user)
     return redirect(url_for('user', nickname = nickname))
 
 @app.route('/unfollow/<nickname>')
