@@ -1,10 +1,10 @@
 <p>尊敬的{{ user.nickname }},</p>
-<p><a href='{{ url_for('user', nickname = follower.nickname, _external = True) }}'>{{ follower.nickname }}</a> 现已关注你。</p>
+<p><a href = '{{ url_for('user', nickname = follower.nickname, _external = True) }}'>{{ follower.nickname }}</a> 现已关注你。</p>
 <table>
-    <tr valign='top'>
+    <tr valign = 'top'>
         <td><img src='{{ follower.avatar(50) }}'></td>
         <td>
-            <a href='{{ url_for('user', nickname = follower.nickname, _external = True) }}'>{{ follower.nickname }}</a><br />
+            <a href = '{{ url_for('user', nickname = follower.nickname, _external = True) }}'>{{ follower.nickname }}</a><br />
             {{ follower.about_me }}
         </td>
     </tr>

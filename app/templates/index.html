@@ -1,37 +1,40 @@
 {% extends 'layout.html' %}
+
 {% block content %}
 <h1>你好，{{ g.user.nickname }}！</h1>
-<form action='' method='post' name='post'>
-    {{ form.hidden_tag() }}
-    <table>
-        <tr>
-            <td>说些什么呗：</td>
-            <td>{{ form.post(size = 30, maxlength = 140) }}</td>
-            <td>
-            {% for error in form.errors.post %}
-            <span style="color: red;">[{{error}}]</span><br>
-            {% endfor %}
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type='submit' value='博客发布'></td>
-            <td></td>
-        </tr>
-    </table>
-</form>
-<!-- 微博分页栏 -->
-{% for post in posts.items %}
-     {% include 'post.html' %}
-{% endfor %}
-{% if posts.has_prev %}
-     <a href="{{ url_for('index', page = posts.prev_num) }}"><< 新帖子</a>
-{% else %}
-     << 新帖子
-{% endif %} |
-{% if posts.has_next %}
-     <a href="{{ url_for('index', page = posts.next_num) }}">旧帖子 >></a>
-{% else %}
-     旧帖子 >>
-{% endif %}
+{% include 'flash.html' %}
+  <div class="well">
+	<form class="form-horizontal" action="" method="post" name="post">
+	{{ form.hidden_tag() }}
+	  <div class="control-group{% if form.errors.post %} error {% endif %}">
+		<label class="control-label" for="post">说些什么呗：</label>
+		<div class="controls">
+		{{ form.post(size=30, maxlength=140) }}
+		{% for error in form.errors.post %}
+		<span class="help-inline">[{{ error }}]</span><br>
+		{% endfor %}
+		</div>
+	  </div>
+	  <div class="control-group">
+		<div class="controls">
+		  <input class="btn btn-primary" type="submit" value="发表">
+		</div>
+	  </div>
+	</form>
+  </div>
+  {% for post in posts.items %}
+  {% include 'post.html' %}
+  {% endfor %}
+  <ul class="pager">
+	{% if posts.has_prev %}
+	<li class="previous"><a href="{{ url_for('index', page=posts.prev_num) }}">新帖子</a></li>
+	{% else %}
+	<li class="previous disabled"><a href="#">新帖子</a></li>
+	{% endif %}
+	{% if posts.has_next %}
+	<li class="next"><a href="{{ url_for("index", page=posts.next_num) }}">旧帖子</a></li>
+	{% else %}
+	<li class="next disabled"><a href="#">旧帖子</a></li>
+	{% endif %}
+  </ul>
 {% endblock %}
