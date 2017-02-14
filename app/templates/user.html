@@ -2,36 +2,36 @@
 
 {% block content %}
 {% include 'flash.html' %}
-<div class = 'well well-large' style = 'height: 140px;'>
-    <div class = 'pull-right'>
-        <img src = '{{ user.avatar(128) }}' class = 'img-polaroid'>
+<div class="well well-large" style="height: 140px;">
+    <div class="pull-right">
+        <img src="{{ user.avatar(128) }}" class="img-polaroid">
     </div>
     <h1>{{ user.nickname }}</h1>
     {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-    {% if user.last_seen %}<p><em>最近一次访问：{{ user.last_seen }}</em></p>{% endif %}
-    <p>关注者：{{ user.followers.count() - 1 }} | 被关注者：{{ user.followed.count() - 1 }} |
+    {% if user.last_seen %}<p><em>最近一次访问：{{ momentjs(user.last_seen).calendar() }}</em></p>{% endif %}
+    <p>已关注：{{ user.followers.count() - 1 }} | 粉丝：{{ user.followed.count() - 1 }} |
     {% if user.id == g.user.id %}
-        <a href = '{{ url_for('edit') }}'>编辑您的个人信息</a>
+        <a href="{{ url_for('edit') }}">编辑您的个人信息</a>
     {% elif not g.user.is_following(user) %}
-        <a href = '{{ url_for('follow', nickname = user.nickname)}}'>关注</a>
+        <a href="{{ url_for('follow', nickname=user.nickname)}}">关注</a>
     {% else %}
-        <a href = '{{ url_for('unfollow', nickname = user.nickname) }}'>取消关注</a>
+        <a href="{{ url_for('unfollow', nickname=user.nickname) }}">取消关注</a>
     {% endif %}
     </p>
 </div>
 {% for post in posts.items %}
     {% include 'post.html' %}
 {% endfor %}
-<ul class = 'pager'>
+<ul class="pager">
     {% if posts.has_prev %}
-    <li class = 'previous'><a href = '{{ url_for('user', nickname = user.nickname, page = posts.prev_num) }}'>新帖子</a></li>
+    <li class="previous"><a href="{{ url_for('user', nickname=user.nickname, page=posts.prev_num) }}">新帖子</a></li>
     {% else %}
-    <li class = 'previous disabled'><a href = '#'>新帖子</a></li>
+    <li class="previous disabled"><a href="#">新帖子</a></li>
     {% endif %}
     {% if posts.has_next %}
-    <li class = 'next'><a href="{{ url_for('user', nickname = user.nickname, page = posts.next_num) }}">旧帖子</a></li>
+    <li class="next"><a href="{{ url_for('user', nickname=user.nickname, page=posts.next_num) }}">旧帖子</a></li>
     {% else %}
-    <li class = 'next disabled'><a href = '#'>旧帖子</a></li>
+    <li class="next disabled"><a href="#">旧帖子</a></li>
     {% endif %}
 </ul>
 {% endblock %}

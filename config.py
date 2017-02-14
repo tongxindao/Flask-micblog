@@ -9,7 +9,7 @@ CSRF_ENABLED = True
 SECRET_KEY = '\xb4\x92\x86\xa9!\xb3\xa4%\xa6\xcf\x0e\x82\xe6\x7f\xb7'
 
 OPENID_PROVIDERS = [
-    { 'name': 'OpenID', 'url': 'http://www.openid.org.cn' }]
+    { 'name': 'OpenID', 'url': 'http://sunshine.openid.org.cn' }]
 
 '''
 问题一：
