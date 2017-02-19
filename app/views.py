@@ -3,11 +3,12 @@
 
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
-from app import app, db, lm, oid
+from flask_babel import gettext
+from app import app, db, lm, oid, babel
 from .forms import LoginForm, EditForm, PostForm, SearchForm
 from .models import User, Post, ROLE_USER, ROLE_ADMIN
 from datetime import datetime
-from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
+from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES
 from emails import follower_notification
 
 '''
@@ -28,11 +29,11 @@ def index(page = 1):
         post = Post(body = form.post.data, timestamp = datetime.utcnow(), author = g.user)
         db.session.add(post)
         db.session.commit()
-        flash('您的信息现已推出！')
+        flash(gettext('您的信息现已推出！'))
         return redirect(url_for('index')) # 避免用户在提交 blog 后不小心触发刷新的动作而导致插入重复的 blog。
     posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False) # User 类中的 followed_posts 方法返回一个 sqlalchemy 查询对象，该查询对象用于获取我们感兴趣的 blog。
     return render_template('index.html', 
-        title = '主页',
+        title = 'Home',
         form = form,
         posts = posts)
 
@@ -48,6 +49,7 @@ def before_request():
         db.session.add(g.user)
         db.session.commit()
         g.search_form = SearchForm()
+    g.locale = get_locale()
 '''
 全局变量 current_user 是被 Flask-Login 设置的，因此我们只需要把它赋给 g.user ，让访问起来更方便。有了这个，所有请求将会访问到登录用户，即使在模版里。
 '''
@@ -61,24 +63,25 @@ def login():# Flask 中的 g 全局变量是一个在请求生命周期中用来
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        flash('登陆请求的OpenID = "' + form.openid.data + '", 记住我 = ' + str(form.remember_me.data))
+        # flash('登陆请求的OpenID = "' + form.openid.data + '", 记住我 = ' + str(form.remember_me.data))
         session['remember_me'] = form.remember_me.data
         return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
     return render_template('login.html',
-        title = '登陆',
+        title = 'Login',
         form = form,
         providers = app.config['OPENID_PROVIDERS'])
 
 @oid.after_login
 def after_login(resp):
     if resp.email is None or resp.email == "":
-        flash('无效登陆，请重试！')
+        flash(gettext('无效登陆，请重试！'))
         return redirect(url_for('login'))
     user = User.query.filter_by(email = resp.email).first()
     if user is None:
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
+        nickname = User.make_valid_nickname(nickname)
         nickname = User.make_unique_nickname(nickname)
         user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
         db.session.add(user)
@@ -104,7 +107,7 @@ def logout():
 def user(nickname, page = 1):
     user = User.query.filter_by(nickname = nickname).first()
     if user is None:
-        flash('昵称 ' + nickname + ' 未找到。')
+        flash(gettext('昵称 %(nickname)s 未找到。', nickname = nickname))
         return redirect(url_for('index'))
     posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
     return render_template('user.html',
@@ -120,7 +123,7 @@ def edit():
         g.user.about_me = form.about_me.data
         db.session.add(g.user)
         db.session.commit()
-        flash('你的更改已保存')
+        flash(gettext('你的更改已保存'))
         return redirect(url_for('edit'))
     elif request.method != 'POST':
         form.nickname.data = g.user.nickname
@@ -141,18 +144,18 @@ def internal_error(error):
 def follow(nickname):
     user = User.query.filter_by(nickname = nickname).first()
     if user is None:
-        flash('用户 %s 未找到。' % nickname)
+        flash(gettext('用户 %(nickname)s 未找到。', nickname = nickname))
         return redirect(url_for('index'))
     if user == g.user:
-        flash('你不能关注自己！')
-        return redirect(url_for('user', nickname=nickname))
+        flash(gettext('你不能关注自己！'))
+        return redirect(url_for('user', nickname = nickname))
     u = g.user.follow(user)
     if u is None:
-        flash('不能关注 ' + nickname + '.')
-        return redirect(url_for('user', nickname=nickname))
+        flash(gettext('不能关注 %(nickname)s', nickname = nickname))
+        return redirect(url_for('user', nickname = nickname))
     db.session.add(u)
     db.session.commit()
-    flash('目前你关注 ' + nickname + '!')
+    flash(gettext('目前你关注 %(nickname)s！', nickname = nickname))
     follower_notification(user, g.user)
     return redirect(url_for('user', nickname = nickname))
 
@@ -161,18 +164,18 @@ def follow(nickname):
 def unfollow(nickname):
     user = User.query.filter_by(nickname = nickname).first()
     if user is None:
-        flash('用户 %s 未找到' % nickname)
+        flash(gettext('用户 %(nickname)s 未找到', nickname = nickname))
         return redirect(url_for('index'))
     if user == g.user:
-        flash('你不能取消关注自己！')
+        flash(gettext('你不能取消关注自己！'))
         return redirect(url_for('user', nickname = nickname))
     u = g.user.unfollow(user)
     if u is None:
-        flash('不能取消关注 ' + nickname + '.')
+        flash(gettext('不能取消关注 %(nickname)s。', nickname = nickname))
         return redirect(url_for('user', nickname = nickname))
     db.session.add(u)
     db.session.commit()
-    flash('你已停止关注 ' + nickname + '.')
+    flash(gettext('你已停止关注 %(nickname)s。',  nickname = nickname))
     return redirect(url_for('user', nickname = nickname))
 
 @app.route('/search', methods = ['POST'])
@@ -189,3 +192,7 @@ def search_results(query): # 不支持中文搜索
     return render_template('search_results.html',
         query = query,
         results = results)
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(LANGUAGES.keys())

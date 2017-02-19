@@ -11,6 +11,10 @@ from flask_mail import Mail
 
 from momentjs import momentjs
 
+from flask_babel import Babel, lazy_gettext
+
+from flask.json import JSONEncoder
+
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
@@ -18,7 +22,7 @@ db = SQLAlchemy(app)
 lm = LoginManager()
 lm.init_app(app)
 lm.login_view = 'login'
-lm.login_message = '请您先登陆'
+lm.login_message = lazy_gettext('请您先登陆。')
 oid = OpenID(app, os.path.join(basedir, 'tmp'))
 
 mail = Mail(app)
@@ -34,5 +38,19 @@ if not app.debug:
     app.logger.info('microblog startup')
 
 app.jinja_env.globals['momentjs'] = momentjs
+
+babel = Babel(app)
+
+class CustomJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        from speaklater import is_lazy_string
+        if is_lazy_string(obj):
+            try:
+                return unicode(obj) # python 2
+            except NameError:
+                return str(obj) # python 3
+        return super(CustomJSONEncoder, self).default(obj)
+
+app.json_encoder = CustomJSONEncoder
 
 from app import views, models

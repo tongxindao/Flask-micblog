@@ -15,17 +15,17 @@ function set_openid(openid, pr)
 </script>
 {% include 'flash.html' %}
 <div class="well">
-<h3>请登陆</h3>
+<h3>{{ _('请登陆') }}</h3>
 <form class="form" action="" method="post" name="login">
     {{form.hidden_tag()}}
-	<div class="help-block">请输入您的OpenID，或选择以下提供者:</div>
+	<div class="help-block">{{ _('请输入您的OpenID，或选择以下提供者:') }}</div>
         <div class="control-group">
             {% for pr in providers %}
             <a href="javascript:set_openid('{{ pr.url }}', '{{ pr.name }}');"><img src="/static/img/{{ pr.name.lower() }}.png" class="img-polaroid" style="margin:2px;" /></a>
             {% endfor %}
         </div>
         <div class="control-group{% if form.errors.openid %} error{% endif %}">
-            <label class="control-label" for="openid">或在此确认您的OpenID：</label>
+            <label class="control-label" for="openid">{{ _('或在此确认您的OpenID：') }}</label>
             <div class="controls">
                 {{ form.openid(size=80, class="span4") }}
                 {% for error in form.errors.openid %}
@@ -36,13 +36,13 @@ function set_openid(openid, pr)
         <div class="control-group">
             <div class="controls">
                 <label class="checkbox" for="remember_me">
-                    {{ form.remember_me }} 记住我
+                    {{ form.remember_me }} {{ _('记住我') }}
                 </label>
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
-                <input class="btn btn-primary" type="submit" value="登陆">
+                <input class="btn btn-primary" type="submit" value="{{ _('登陆') }}">
             </div>
         </div>
     </form>

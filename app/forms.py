@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length
 from app.models import User
+from flask_babel import gettext
 
 class LoginForm(FlaskForm):
     openid = StringField('openid', validators=[DataRequired()])
@@ -21,9 +22,12 @@ class EditForm(FlaskForm):
             return False
         if self.nickname.data == self.original_nickname:
             return True
+        if self.nickname.data != User.make_valid_nickname(self.nickname.data):
+            self.nickname.errors.append(gettext('此昵称包含无效字符。请仅使用字母、数字、点和下划线。'))
+            return False
         user = User.query.filter_by(nickname = self.nickname.data).first()
-        if user != None:
-            self.nickname.errors.append('此昵称已在使用中。请选择另一个。')
+        if user is not None:
+            self.nickname.errors.append(gettext('此昵称已在使用中。请选择另一个。'))
             return False
         return True
 

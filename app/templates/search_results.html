@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h1>搜索结果 '{{ query }}':</h1>
+<h1>{{ _('搜索结果 "%(query)"：', query = query) }}</h1>
 {% include 'flash.html' %}
 {% for post in results %}
     {% include 'post.html' %}

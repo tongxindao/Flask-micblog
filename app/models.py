@@ -1,6 +1,7 @@
 # coding: utf-8
 from app import db, app
 import hashlib
+import re
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
@@ -42,6 +43,10 @@ class User(db.Model):
     def avatar(self, size):# 头像
         return 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' + '?d=mm&s=' + str(size)
         # return 'https://www.gravatar.com/avator/' + hashlib.md5(self.email.lower()).hexdigest() + '?d=mm&s=' + str(size) # d=mm 决定什么样的图片占位符当用户没有 Gravatar 账户，mm 选项将会返回一个“神秘人”图片，一个人灰色的轮廓。s=N 选项要求头像按照以像素为单位的给定尺寸缩放。
+
+    @staticmethod
+    def make_valid_nickname(nickname):
+        return re.sub('[^a-zA-Z0-9_\.]', '', nickname)
 
     @staticmethod
     def make_unique_nickname(nickname):
