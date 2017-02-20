@@ -7,8 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-02-19 13:00+0800\n"
-"PO-Revision-Date: 2017-02-19 13:07+0800\n"
+"POT-Creation-Date: 2017-02-20 00:53+0800\n"
+"PO-Revision-Date: 2017-02-20 00:54+0800\n"
+"Last-Translator: \n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -16,72 +17,77 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
-"Last-Translator: \n"
 "X-Generator: Poedit 1.8.9\n"
 
-#: app/__init__.py:26
+#: app/__init__.py:25
 msgid "请您先登陆。"
 msgstr "Please log in to access this page."
 
 #: app/forms.py:26
 msgid "此昵称包含无效字符。请仅使用字母、数字、点和下划线。"
-msgstr "This nickname has invalid characters. Please use letters, numbers, dots and underscores only."
+msgstr ""
+"This nickname has invalid characters. Please use letters, numbers, dots "
+"and underscores only."
 
 #: app/forms.py:30
 msgid "此昵称已在使用中。请选择另一个。"
 msgstr "This nickname is already in use. Please choose another one."
 
-#: app/views.py:32
+#: app/translates.py:24
+msgid "错误：未配置翻译服务。"
+msgstr "Error: translation service not configured."
+
+#: app/views.py:41
 msgid "您的信息现已推出！"
 msgstr "Your post is now live!"
 
-#: app/views.py:77
+#: app/views.py:86
 msgid "无效登陆，请重试！"
 msgstr "Invalid login. Please try again."
 
-#: app/views.py:110
+#: app/views.py:119
 #, python-format
 msgid "昵称 %(nickname)s 未找到。"
 msgstr "User %(nickname)s not found."
 
-#: app/views.py:126
+#: app/views.py:135
 msgid "你的更改已保存"
 msgstr "Your changes have been saved."
 
-#: app/views.py:147
+#: app/views.py:156
 #, python-format
 msgid "用户 %(nickname)s 未找到。"
 msgstr "User %(nickname)s not found"
 
-#: app/views.py:150
+#: app/views.py:159
 msgid "你不能关注自己！"
 msgstr "You can\\'t follow yourself!"
 
-#: app/views.py:154
+#: app/views.py:163
 #, python-format
 msgid "不能关注 %(nickname)s"
 msgstr "Cannot follow %(nickname)s"
 
-#: app/views.py:158
+#: app/views.py:167
 #, python-format
 msgid "目前你关注 %(nickname)s！"
 msgstr "You are now following %(nickname)s!"
 
-#: app/views.py:167
+#: app/views.py:176
 #, python-format
 msgid "用户 %(nickname)s 未找到"
 msgstr "User %(nickname)s not found."
 
-#: app/views.py:170
+#: app/views.py:179
 msgid "你不能取消关注自己！"
 msgstr "You can\\'t unfollow yourself!"
 
-#: app/views.py:174
+#: app/views.py:183
 #, python-format
 msgid "不能取消关注 %(nickname)s。"
 msgstr "Cannot unfollow %(nickname)s."
 
-#: app/views.py:178
+#: app/views.py:187
 #, python-format
 msgid "你已停止关注 %(nickname)s。"
 msgstr "You have stopped following %(nickname)s."
@@ -154,7 +160,7 @@ msgstr "Newer Posts"
 msgid "旧帖子"
 msgstr "Older Posts"
 
-#: app/templates/layout.html:5 app/templates/layout.html:27
+#: app/templates/layout.html:5 app/templates/layout.html:48
 msgid "微型博客"
 msgstr "micblog"
 
@@ -162,19 +168,23 @@ msgstr "micblog"
 msgid "欢迎来到微博平台"
 msgstr "Welcome to micblog"
 
-#: app/templates/layout.html:29
+#: app/templates/layout.html:26
+msgid "错误：无法联系服务器。"
+msgstr "Error: Could not contact server."
+
+#: app/templates/layout.html:50
 msgid "主页"
 msgstr "Home"
 
-#: app/templates/layout.html:31
+#: app/templates/layout.html:52
 msgid "空间"
 msgstr "Your Profile"
 
-#: app/templates/layout.html:32
+#: app/templates/layout.html:53
 msgid "登出"
 msgstr "Logout"
 
-#: app/templates/layout.html:38
+#: app/templates/layout.html:59
 msgid "搜索"
 msgstr "Search"
 
@@ -203,6 +213,10 @@ msgstr "Sign In"
 msgid "%(nickname)s 在 %(when)s 说:"
 msgstr "%(nickname)s at %(when)s said:"
 
+#: app/templates/post.html:15
+msgid "翻译"
+msgstr "Translate"
+
 #: app/templates/search_results.html:4
 msgid "搜索结果 \"%(query)\"："
 msgstr "Search results for \"%(query)\":"
@@ -230,3 +244,6 @@ msgstr "Follow"
 #: app/templates/user.html:18
 msgid "取消关注"
 msgstr "Unfollow"
+
+#~ msgid "Error: Could not contact server."
+#~ msgstr "错误：无法联系到服务器。"

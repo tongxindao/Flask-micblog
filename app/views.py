@@ -10,6 +10,9 @@ from .models import User, Post, ROLE_USER, ROLE_ADMIN
 from datetime import datetime
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES
 from emails import follower_notification
+from guess_language import guessLanguage
+from flask import jsonify
+from translates import baidu_translate
 
 '''
 以下三行代码可解决：UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
@@ -26,7 +29,13 @@ sys.setdefaultencoding('utf8')
 def index(page = 1):
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(body = form.post.data, timestamp = datetime.utcnow(), author = g.user)
+        language = guessLanguage(form.post.data)
+        if language == 'UNKNOWN' or len(language) > 5:
+            language = ''
+        post = Post(body = form.post.data, 
+            timestamp = datetime.utcnow(), 
+            author = g.user,
+            language = language)
         db.session.add(post)
         db.session.commit()
         flash(gettext('您的信息现已推出！'))
@@ -196,3 +205,12 @@ def search_results(query): # 不支持中文搜索
 @babel.localeselector
 def get_locale():
     return request.accept_languages.best_match(LANGUAGES.keys())
+
+@app.route('/translate', methods = ['POST'])
+@login_required
+def translate():
+    return jsonify({
+        'text': baidu_translate(
+            request.form['text'],
+            request.form['sourceLang'],
+            request.form['destLang']) })
