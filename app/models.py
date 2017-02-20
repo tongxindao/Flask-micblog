@@ -84,7 +84,7 @@ if sys.version_info >= (3, 0):
     enable_search = False
 else:
     enable_search = True
-    import flask_whooshalchemy as whooshalchemy
+    import flask_whooshalchemyplus as whooshalchemy
 
 class Post(db.Model):
     __searchable__ = ['body'] # 索引 blog 的 body 字段。

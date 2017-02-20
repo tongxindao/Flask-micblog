@@ -90,3 +90,5 @@ ENV/
 
 # Flask-micblog
 tmp/
+config.py
+*.db

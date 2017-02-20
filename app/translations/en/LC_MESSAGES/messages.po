@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-02-20 00:53+0800\n"
-"PO-Revision-Date: 2017-02-20 00:54+0800\n"
+"POT-Creation-Date: 2017-02-20 10:02+0800\n"
+"PO-Revision-Date: 2017-02-20 10:03+0800\n"
 "Last-Translator: \n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
@@ -41,53 +41,65 @@ msgstr "Error: translation service not configured."
 msgid "您的信息现已推出！"
 msgstr "Your post is now live!"
 
-#: app/views.py:86
+#: app/views.py:54
+msgid "微博未找到。"
+msgstr "Post not found."
+
+#: app/views.py:57
+msgid "你不能删除这篇微博。"
+msgstr "You cannot delete this post."
+
+#: app/views.py:61
+msgid "你的微博已删除。"
+msgstr "Your post has been deleted."
+
+#: app/views.py:101
 msgid "无效登陆，请重试！"
 msgstr "Invalid login. Please try again."
 
-#: app/views.py:119
+#: app/views.py:134
 #, python-format
 msgid "昵称 %(nickname)s 未找到。"
 msgstr "User %(nickname)s not found."
 
-#: app/views.py:135
+#: app/views.py:150
 msgid "你的更改已保存"
 msgstr "Your changes have been saved."
 
-#: app/views.py:156
+#: app/views.py:171
 #, python-format
 msgid "用户 %(nickname)s 未找到。"
 msgstr "User %(nickname)s not found"
 
-#: app/views.py:159
+#: app/views.py:174
 msgid "你不能关注自己！"
 msgstr "You can\\'t follow yourself!"
 
-#: app/views.py:163
+#: app/views.py:178
 #, python-format
 msgid "不能关注 %(nickname)s"
 msgstr "Cannot follow %(nickname)s"
 
-#: app/views.py:167
+#: app/views.py:182
 #, python-format
 msgid "目前你关注 %(nickname)s！"
 msgstr "You are now following %(nickname)s!"
 
-#: app/views.py:176
+#: app/views.py:191
 #, python-format
 msgid "用户 %(nickname)s 未找到"
 msgstr "User %(nickname)s not found."
 
-#: app/views.py:179
+#: app/views.py:194
 msgid "你不能取消关注自己！"
 msgstr "You can\\'t unfollow yourself!"
 
-#: app/views.py:183
+#: app/views.py:198
 #, python-format
 msgid "不能取消关注 %(nickname)s。"
 msgstr "Cannot unfollow %(nickname)s."
 
-#: app/views.py:187
+#: app/views.py:202
 #, python-format
 msgid "你已停止关注 %(nickname)s。"
 msgstr "You have stopped following %(nickname)s."
@@ -213,9 +225,13 @@ msgstr "Sign In"
 msgid "%(nickname)s 在 %(when)s 说:"
 msgstr "%(nickname)s at %(when)s said:"
 
-#: app/templates/post.html:15
+#: app/templates/post.html:16
 msgid "翻译"
 msgstr "Translate"
+
+#: app/templates/post.html:22
+msgid "删除"
+msgstr "Delete"
 
 #: app/templates/search_results.html:4
 msgid "搜索结果 \"%(query)\"："

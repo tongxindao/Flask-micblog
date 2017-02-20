@@ -4,11 +4,12 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_babel import gettext
+from flask_sqlalchemy import get_debug_queries
 from app import app, db, lm, oid, babel
 from .forms import LoginForm, EditForm, PostForm, SearchForm
 from .models import User, Post, ROLE_USER, ROLE_ADMIN
 from datetime import datetime
-from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES
+from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT
 from emails import follower_notification
 from guess_language import guessLanguage
 from flask import jsonify
@@ -45,6 +46,21 @@ def index(page = 1):
         title = 'Home',
         form = form,
         posts = posts)
+
+@app.route('/delete/<int:id>')
+@login_required
+def delete(id):
+    post = Post.query.get(id)
+    if post == None:
+        flash(gettext('微博未找到。'))
+        return redirect(url_for('index'))
+    if post.author.id != g.user.id:
+        flash(gettext('你不能删除这篇微博。'))
+        return redirect(url_for('index'))
+    db.session.delete(post)
+    db.session.commit()
+    flash(gettext('你的微博已删除。'))
+    return redirect(url_for('index'))
 
 @lm.user_loader
 def load_user(id):
@@ -104,6 +120,13 @@ def after_login(resp):
         session.pop('remember_me', None)
     login_user(user, remember = remember_me)
     return redirect(request.args.get('next') or url_for('index'))
+
+@app.after_request
+def after_request(response):
+    for query in get_debug_queries():
+        if query.duration >= DATABASE_QUERY_TIMEOUT:
+            app.logger.warning("SLOW QUERY: %s\nParameters: %s\nDuration: %fs\nContext: %s\n" % (query.statement, query.parameters, query.duration, query.context))
+    return response
 
 @app.route('/logout')
 def logout():
@@ -196,7 +219,7 @@ def search():
 
 @app.route('/search_results/<query>')
 @login_required
-def search_results(query): # 不支持中文搜索
+def search_results(query): # 使用Flask-WhooshAlchemyPlus可以实现英文模糊加全文搜索和中文全文搜索。注：建立索引前的内容不在搜索范围内。
     results = Post.query.whoosh_search(query, MAX_SEARCH_RESULTS).all()
     return render_template('search_results.html',
         query = query,
