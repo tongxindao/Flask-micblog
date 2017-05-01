@@ -1,5 +1,5 @@
-{{ _('尊敬的 %(user.nickname)，', nickname = user.nickname }}：
-{{ _('%(nickname)s 已关注你。点击以下链接访问 %(nickname)s 的个人资料页面：', nickname = follower.nickname) }}
-{{ url_for('user',nickname = follower.nickname, _external = True) }}
+{{ _('尊敬的 %(nickname)s ：', nickname=user.nickname) }}
+{{ _('%(nickname)s 现已关注你。请点击访问 %(nickname)s 的主页：', nickname=follower.nickname) }}
+{{ url_for("user", nickname=follower.nickname, _external=True) }}
 {{ _('致以诚挚问候，') }}
 {{ _('微博管理团队') }}

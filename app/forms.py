@@ -6,6 +6,7 @@ from app.models import User
 from flask_babel import gettext
 
 class LoginForm(FlaskForm):
+    # DataRequired 验证器只是简单地检查相应域提交的数据是否是空。
     openid = StringField('openid', validators=[DataRequired()])
     remember_me = BooleanField('remember_me', default = False)
 

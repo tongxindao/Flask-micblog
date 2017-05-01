@@ -9,7 +9,8 @@ from app import app, db, lm, oid, babel
 from .forms import LoginForm, EditForm, PostForm, SearchForm
 from .models import User, Post, ROLE_USER, ROLE_ADMIN
 from datetime import datetime
-from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT
+from config import AUTHORIZATION_BASE_URL, TOKEN_URL, POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT
+from requests_oauthlib import OAuth2Session
 from emails import follower_notification
 from guess_language import guessLanguage
 from flask import jsonify
@@ -88,7 +89,7 @@ def login():# Flask 中的 g 全局变量是一个在请求生命周期中用来
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        # flash('登陆请求的OpenID = "' + form.openid.data + '", 记住我 = ' + str(form.remember_me.data))
+        flash('登陆请求的OpenID = "' + form.openid.data + '", 记住我 = ' + str(form.remember_me.data))
         session['remember_me'] = form.remember_me.data
         return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
     return render_template('login.html',

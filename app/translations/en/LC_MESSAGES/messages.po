@@ -7,29 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-02-20 10:02+0800\n"
-"PO-Revision-Date: 2017-02-20 10:03+0800\n"
+"POT-Creation-Date: 2017-04-04 14:58+0800\n"
+"PO-Revision-Date: 2017-04-04 12:40+0800\n"
 "Last-Translator: \n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
-"X-Generator: Poedit 1.8.9\n"
 
 #: app/__init__.py:25
 msgid "请您先登陆。"
 msgstr "Please log in to access this page."
 
-#: app/forms.py:26
+#: app/forms.py:27
 msgid "此昵称包含无效字符。请仅使用字母、数字、点和下划线。"
 msgstr ""
 "This nickname has invalid characters. Please use letters, numbers, dots "
 "and underscores only."
 
-#: app/forms.py:30
+#: app/forms.py:31
 msgid "此昵称已在使用中。请选择另一个。"
 msgstr "This nickname is already in use. Please choose another one."
 
@@ -37,69 +36,69 @@ msgstr "This nickname is already in use. Please choose another one."
 msgid "错误：未配置翻译服务。"
 msgstr "Error: translation service not configured."
 
-#: app/views.py:41
+#: app/views.py:43
 msgid "您的信息现已推出！"
 msgstr "Your post is now live!"
 
-#: app/views.py:54
+#: app/views.py:56
 msgid "微博未找到。"
 msgstr "Post not found."
 
-#: app/views.py:57
+#: app/views.py:59
 msgid "你不能删除这篇微博。"
 msgstr "You cannot delete this post."
 
-#: app/views.py:61
+#: app/views.py:63
 msgid "你的微博已删除。"
 msgstr "Your post has been deleted."
 
-#: app/views.py:101
+#: app/views.py:103
 msgid "无效登陆，请重试！"
 msgstr "Invalid login. Please try again."
 
-#: app/views.py:134
+#: app/views.py:143
 #, python-format
 msgid "昵称 %(nickname)s 未找到。"
 msgstr "User %(nickname)s not found."
 
-#: app/views.py:150
+#: app/views.py:159
 msgid "你的更改已保存"
 msgstr "Your changes have been saved."
 
-#: app/views.py:171
+#: app/views.py:180
 #, python-format
 msgid "用户 %(nickname)s 未找到。"
 msgstr "User %(nickname)s not found"
 
-#: app/views.py:174
+#: app/views.py:183
 msgid "你不能关注自己！"
 msgstr "You can\\'t follow yourself!"
 
-#: app/views.py:178
+#: app/views.py:187
 #, python-format
 msgid "不能关注 %(nickname)s"
 msgstr "Cannot follow %(nickname)s"
 
-#: app/views.py:182
+#: app/views.py:191
 #, python-format
 msgid "目前你关注 %(nickname)s！"
 msgstr "You are now following %(nickname)s!"
 
-#: app/views.py:191
+#: app/views.py:200
 #, python-format
 msgid "用户 %(nickname)s 未找到"
 msgstr "User %(nickname)s not found."
 
-#: app/views.py:194
+#: app/views.py:203
 msgid "你不能取消关注自己！"
 msgstr "You can\\'t unfollow yourself!"
 
-#: app/views.py:198
+#: app/views.py:207
 #, python-format
 msgid "不能取消关注 %(nickname)s。"
 msgstr "Cannot unfollow %(nickname)s."
 
-#: app/views.py:202
+#: app/views.py:211
 #, python-format
 msgid "你已停止关注 %(nickname)s。"
 msgstr "You have stopped following %(nickname)s."
@@ -234,8 +233,9 @@ msgid "删除"
 msgstr "Delete"
 
 #: app/templates/search_results.html:4
-msgid "搜索结果 \"%(query)\"："
-msgstr "Search results for \"%(query)\":"
+#, python-format
+msgid "搜索结果 \"%(query)s\"："
+msgstr ""
 
 #: app/templates/user.html:11
 msgid "最近一次访问："
@@ -263,3 +263,19 @@ msgstr "Unfollow"
 
 #~ msgid "Error: Could not contact server."
 #~ msgstr "错误：无法联系到服务器。"
+
+#~ msgid "尊敬的 %(nickname)s ："
+#~ msgstr "Dear %(nickname)s"
+
+#~ msgid "%(nickname)s 现已关注你。请点击访问 %(nickname)s 的主页："
+#~ msgstr ""
+#~ "%(nickname)s is now a follower. Click"
+#~ " on the following link to visit "
+#~ "%(nickname)s\\'s profile page:"
+
+#~ msgid "微博管理团队"
+#~ msgstr "The microblog admin"
+
+#~ msgid "搜索结果 \"%(query)\"："
+#~ msgstr "Search results for \"%(query)\":"
+
