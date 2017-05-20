@@ -10,7 +10,6 @@ from .forms import LoginForm, EditForm, PostForm, SearchForm
 from .models import User, Post, ROLE_USER, ROLE_ADMIN
 from datetime import datetime
 from config import AUTHORIZATION_BASE_URL, TOKEN_URL, POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES, DATABASE_QUERY_TIMEOUT
-from requests_oauthlib import OAuth2Session
 from emails import follower_notification
 from guess_language import guessLanguage
 from flask import jsonify
