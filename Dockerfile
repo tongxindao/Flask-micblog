@@ -4,8 +4,8 @@ MAINTAINER balin <balin1991@qq.com>
 
 COPY ./Flask-micblog /micblog
 
-RUN apk add --update bash git nginx sqlite \
-	uwsgi uwsgi-python py2-pip xterm \
+RUN apk add --update bash git nginx sqlite tree \
+	uwsgi uwsgi-python py2-pip xterm vim \
 	&& pip2 install --upgrade pip \
 	&& pip2 install --no-cache -r /micblog/requirements.txt \
 	&& chown -R nginx:nginx /micblog \
