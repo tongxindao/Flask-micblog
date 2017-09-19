@@ -31,7 +31,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, "extra_app"))
 SECRET_KEY = 'pv&xk=pdwy^9#rx$ur_)w4@e6a1n65e=ui_4udndc^aby$+jr)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'captcha',
     'pure_pagination',
+    'DjangoUeditor',
 ]
 
 PAGINATION_SETTINGS = {
@@ -66,6 +67,11 @@ PAGINATION_SETTINGS = {
     'SHOW_FIRST_PAGE_WHEN_INVALID': True,
 }
 
+"""
+  xadmin.plungins.auth 下 site.register(User, UserAdmin)
+获取 User 依赖 get_user_model() ,而它首先通过 AUTH_USER_MODEL
+得到当前注册用户。
+"""
 AUTH_USER_MODEL = 'users.UserProfile'
 
 MIDDLEWARE_CLASSES = [
@@ -164,16 +170,16 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-EMAIL_HOST = "smtp.qq.com"
-EMAIL_PORT = 465
-EMAIL_HOST_USER = "balin1991@qq.com"
-EMAIL_HOST_PASSWORD = "ekubdncqmttdjgig"
+EMAIL_HOST = "smtp.xxx.com"
+EMAIL_PORT = email_port
+EMAIL_HOST_USER = "yourcustom@email.com"
+EMAIL_HOST_PASSWORD = "youremailpassword"
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
-EMAIL_FROM = "balin1991@qq.com"
+EMAIL_FROM = "yourcustom@email.com"
 
 MEDIA_URL = '/media/'
 # MEDIA_ROOT 只能设置一个
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')

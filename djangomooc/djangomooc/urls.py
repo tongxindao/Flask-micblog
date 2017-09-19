@@ -26,7 +26,8 @@ from users.views import LoginView, RegisterView, \
     ActiveUserView, ForgetPwdView, ResetView, \
     ModifyPwdView, LogOutView, IndexView
 
-from djangomooc.settings import MEDIA_ROOT, STATIC_ROOT
+from djangomooc.settings import MEDIA_ROOT\
+    #, STATIC_ROOT
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
@@ -56,9 +57,13 @@ urlpatterns = [
     url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
 
     # 当 setting.py 中 DEBUG 为 True 时以下设置将托管静态资源 url
-    url(r'^static/(?P<path>.*)$', serve, {"document_root": STATIC_ROOT}),
+    # url(r'^static/(?P<path>.*)$', serve, {"document_root": STATIC_ROOT}),
+
+    # 富文本相关 url
+    url(r'^ueditor/',include('DjangoUeditor.urls' )),
 ]
 
 # 全局404页面配置
 handler404 = 'users.views.page_not_found'
 handler500 = 'users.views.page_error'
+handler403 = 'users.views.page_no_permission'
