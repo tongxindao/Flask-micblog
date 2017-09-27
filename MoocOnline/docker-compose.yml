@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+
+    web:
+      restart: always
+      build: ./web
+      command: gunicorn djangomooc.wsgi:application -w 2 -b :8000
+      expose:
+        - "8000"
+      volumes:
+        - ./web/djangomooc:/djangomooc
+        - ./web/djangomooc/static:/djangomooc/static
+      env_file: ./web/.env
+      links:
+        - mysql:mysql
+
+    nginx:
+      restart: always
+      build: ./nginx 
+      ports:
+        - "80:80"
+      volumes:
+        - ./web/djangomooc/static:/djangomooc/static
+      volumes_from:
+        - web
+      links:
+        - web:web
+
+    mysql:
+      restart: always
+      build: ./db
+      ports:
+        - "3306:3306"
+      volumes:
+        - ./db/mysql:/var/lib/mysql
+        - ./db/dump:/dump
