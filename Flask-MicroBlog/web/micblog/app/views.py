@@ -119,7 +119,7 @@ def after_login(resp):
         remember_me = session['remember_me']
         session.pop('remember_me', None)
     login_user(user, remember = remember_me)
-    return redirect(request.args.get('next') or url_for('index'))
+    return redirect(request.args.get('fornext') or url_for('index'))
 
 @app.after_request
 def after_request(response):
