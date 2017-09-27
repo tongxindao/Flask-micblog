@@ -8,4 +8,4 @@ ADD djangomooc /djangomooc
 
 WORKDIR /djangomooc
 
-RUN apk add --update --no-cache py-mysqldb jpeg-dev zlib-dev && pip install --no-cache -r requirements.txt
+RUN apk add --update --no-cache py-mysqldb freetype-dev jpeg-dev zlib-dev && pip install --no-cache -r requirements.txt
